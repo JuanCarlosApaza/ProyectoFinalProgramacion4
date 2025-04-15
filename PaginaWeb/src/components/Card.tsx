@@ -2,7 +2,7 @@ import React from 'react';
 import { MyComponentProps } from '../Interface/types';
 import { useNavigate } from 'react-router-dom';
 
-const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, containerClass, aspectRatioClass }) => {
+const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, containerClass, aspectRatioClass, page }) => {
     const nav=useNavigate();
   return (
     <div className={`${containerClass}`}>
@@ -29,7 +29,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
             </h3>
 
             {item.rating && (
-                <div className="mt-1 text-xs opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="mt-1 text-xs opacity-0 transition-opacity group-hover:opacity-0">
                 ★ {item.rating.toFixed(1)}
                 </div>
             )}
@@ -53,7 +53,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
                         {item.rating && <div>★ {item.rating.toFixed(1)}</div>}
                         <button className='text-black rounded-2xl bg-white hover:bg-gray-500 p-1'
                         onClick={()=>{
-                            nav(`/Movies/${item.id}`)
+                            nav(`/${page}/${item.id}`)
                         }}
                         >Mas detalles</button>
                     </div>

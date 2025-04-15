@@ -3,18 +3,39 @@ import { Play } from "lucide-react"
 import { MediaDetail } from "../Interface/types"
 import { getMovieDetails } from "../services/ApiMovie"
 import { useParams } from "react-router-dom"
-
-export function MediaDetailView() {
+import { LoadingSpinner } from "./Loading"
+import { getGameById } from "../services/ApiGames"
+interface props {
+  pagina: string
+  baseImg?:string
+}
+export function MediaDetailView({ pagina , baseImg}: props) {
  const { id } = useParams();
   const [loading, setLoading] = useState(true)
   const [detail, setDetail] = useState<MediaDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchDetails = async () => {
+  const fetchDetailsMovie = async () => {
     if(id){
         try {
             const movie = await getMovieDetails(id, "videos,credits,images,recommendations")
+            console.log(movie);
             setDetail(movie)
+          } catch (err) {
+            setError("No se pudo cargar la información")
+          } finally {
+            setLoading(false)
+          }
+          
+    }
+  }
+  const fetchDetailsGames = async () => {
+    if(id){
+        try {
+            const game = await getGameById(id)
+            console.log("juego",game);
+            if (!game) return
+            setDetail(game)
           } catch (err) {
             setError("No se pudo cargar la información")
           } finally {
@@ -22,15 +43,14 @@ export function MediaDetailView() {
           }
     }
   }
-  useEffect(() => {
-    fetchDetails()
+  useEffect(() => { 
+    if (pagina==="Juegos")  fetchDetailsGames();
+    else  fetchDetailsMovie();
   }, [id])
 
   if (loading) {
     return (
-      <div className="w-full h-[500px] bg-black/20 animate-pulse flex items-center justify-center">
-        <p className="text-white/70">Cargando...</p>
-      </div>
+      <LoadingSpinner text="Cargando...."/>
     )
   }
 
@@ -48,7 +68,7 @@ export function MediaDetailView() {
       <div className="relative w-full h-[701px] overflow-hidden">
         {detail.backdrop_path ? (
           <img
-            src={"https://image.tmdb.org/t/p/w500"+detail.backdrop_path || "/placeholder.svg"}
+            src={baseImg? baseImg+detail.backdrop_path: detail.backdrop_path || "/placeholder.svg"}
             alt={detail.title}
             className="w-full h-full object-cover"
           />

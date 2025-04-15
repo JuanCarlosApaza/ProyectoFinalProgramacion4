@@ -4,7 +4,7 @@ import GeminiTest from "./components/InteligenciaArtificial";
 import Peliculas from "./pages/Peliculas";
 import { MediaDetailView } from "./components/Details";
 import Juegos from "./pages/Juegos";
-
+import Libros from "./pages/Libros";
 
 const Rutas = () => {
   return (
@@ -13,8 +13,13 @@ const Rutas = () => {
         <Route path="/" element={<Inicio/>} />
         <Route path="/IA" element={<GeminiTest/>} />
         <Route path="/Movies" element={<Peliculas/>} />
-        <Route path="/Movies/:id" element={<MediaDetailView/>} />
+        <Route path="/Movies/:id" element={<MediaDetailView 
+        pagina="pelicula" 
+        baseImg="https://image.tmdb.org/t/p/w500"/>} />
         <Route path="/Games" element={<Juegos/>}/>
+        <Route path="/Games/:id" element={<MediaDetailView 
+        pagina="Juegos"/>} />
+        <Route path="/Books" element={<Libros/>}/>
       </Routes>
     </BrowserRouter>
   );

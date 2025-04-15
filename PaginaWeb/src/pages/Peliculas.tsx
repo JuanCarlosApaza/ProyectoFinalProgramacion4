@@ -29,7 +29,7 @@ const Peliculas=() =>{
     <div className="container mx-auto">
         <h2 className="text-xl font-bold mb-4">Películas Populares</h2>
         {loading ? (
-        <LoadingSpinner text="Cargando Juegos"/>
+        <LoadingSpinner text="Cargando Peliculas"/>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {movies.map((movie) => (
@@ -40,6 +40,7 @@ const Peliculas=() =>{
               showOverview={true}
               containerClass="custom-container"
               aspectRatioClass="aspect-ratio-16/9"
+              page='Movies'
             />
           ))}
         </div>

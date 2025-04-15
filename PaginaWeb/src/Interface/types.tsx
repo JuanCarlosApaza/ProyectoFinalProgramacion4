@@ -8,10 +8,11 @@ export type Model={
 }
 export interface MyComponentProps {
     item: Model;
-    imageBaseUrl: string;
+    imageBaseUrl?: string;
     showOverview: boolean;
     containerClass?: string;
     aspectRatioClass?: string;
+    page?:string,
 };
 
 export interface MediaDetail {

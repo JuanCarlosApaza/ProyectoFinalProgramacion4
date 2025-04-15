@@ -8,6 +8,7 @@ const Inicio = () =>{
         <Link to="/IA">Inteligencia Artificial</Link>
         <Link to="/Movies">Peliculas</Link>
         <Link to="/Games">Juegos</Link>
+        <Link to="/Books">Libros</Link>
         </>
     )
 }
