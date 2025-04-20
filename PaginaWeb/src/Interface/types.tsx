@@ -28,5 +28,6 @@ export interface MediaDetail {
     duration?: string
     trailer_url?: string
     genres?:string[]
+    platforms:string[]
 }
   

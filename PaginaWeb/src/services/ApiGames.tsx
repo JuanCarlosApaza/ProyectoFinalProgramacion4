@@ -24,7 +24,7 @@ export const getGames = async (): Promise<Model[] | undefined> => {
     }
 
     const data = await response.json();
-
+    console.log("Juego",data)
     const games: Model[] = data.map((game: any) => ({
       id: game.id,
       title: game.name,
@@ -37,7 +37,6 @@ export const getGames = async (): Promise<Model[] | undefined> => {
         ? `${game.cover.image_id}.jpg`
         : "",
     }));
-
     return games;
   } catch (error) {
     console.error("Error fetching games:", error);
@@ -59,7 +58,8 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
           "Content-Type": "application/json",
         },
         body: `
-          fields name, summary, cover.image_id, first_release_date, rating, genres.name, videos.video_id;
+          fields name, summary, cover.image_id, first_release_date, rating, genres.name, videos.video_id, 
+          screenshots.image_id, artworks.image_id, platforms.name;
           where id = ${gameId};
         `
       }
@@ -76,19 +76,25 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
       poster_path: game.cover
         ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
         : undefined,
-      backdrop_path: undefined, // IGDB no tiene backdrops como películas
+      backdrop_path:
+        game.artworks?.[0]?.image_id
+          ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.artworks[0].image_id}.jpg`
+          : game.screenshots?.[0]?.image_id
+            ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.screenshots[0].image_id}.jpg`
+            : undefined,
       rating: Math.round(game.rating ?? 0),
       category: "game",
-      languages: ["en"], // No disponible en IGDB
+      languages: ["en"],
       release_date: game.first_release_date
         ? new Date(game.first_release_date * 1000).toISOString().split("T")[0]
         : "Desconocida",
-      duration: undefined, // Tampoco hay duración
+      duration: undefined,
       trailer_url: game.videos?.[0]?.video_id
         ? `https://www.youtube.com/watch?v=${game.videos[0].video_id}`
         : undefined,
-      genres: game.genres?.map((genre: any) => genre.name) ?? []
-    };
+      genres: game.genres?.map((genre: any) => genre.name) ?? [],
+      platforms: game.platforms?.map((platform: any) => platform.name) ?? []
+    };    
 
     return mediaDetail;
   } catch (error) {

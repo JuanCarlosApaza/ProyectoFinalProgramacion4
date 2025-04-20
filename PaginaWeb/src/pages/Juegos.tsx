@@ -13,7 +13,6 @@ const Juegos = () => {
       const data = await getGames();
       if (!data) return;
       setGames(data);
-      console.log("datos:", data);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {

@@ -18,29 +18,29 @@ export function MediaDetailView({ pagina , baseImg}: props) {
   const fetchDetailsMovie = async () => {
     if(id){
         try {
-            const movie = await getMovieDetails(id, "videos,credits,images,recommendations")
-            console.log(movie);
-            setDetail(movie)
-          } catch (err) {
-            setError("No se pudo cargar la información")
-          } finally {
-            setLoading(false)
-          }
+          const movie = await getMovieDetails(id, "videos,credits,images,recommendations")
+          console.log(movie);
+          setDetail(movie)
+        } catch (err) {
+          setError("No se pudo cargar la información")
+        } finally {
+          setLoading(false)
+        }
           
     }
   }
   const fetchDetailsGames = async () => {
     if(id){
         try {
-            const game = await getGameById(id)
-            console.log("juego",game);
-            if (!game) return
-            setDetail(game)
-          } catch (err) {
-            setError("No se pudo cargar la información")
-          } finally {
-            setLoading(false)
-          }
+          const game = await getGameById(id)
+          console.log("juego",game);
+          if (!game) return
+          setDetail(game)
+        } catch (err) {
+          setError("No se pudo cargar la información")
+        } finally {
+          setLoading(false)
+        }
     }
   }
   useEffect(() => { 
@@ -64,7 +64,6 @@ export function MediaDetailView({ pagina , baseImg}: props) {
 
   return (
     <div className="relative w-full">
-      {/* Hero Banner con imagen de fondo */}
       <div className="relative w-full h-[701px] overflow-hidden">
         {detail.backdrop_path ? (
           <img
