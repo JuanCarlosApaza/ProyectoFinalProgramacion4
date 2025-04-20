@@ -4,6 +4,7 @@ const Inicio = () => {
     return (
         <>
 
+
             <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
                 {/* Columna izquierda */}
                 <div className="w-full md:w-[50%] flex flex-col items-start justify-start p-6 md:p-14 md:ml-20">
@@ -94,6 +95,7 @@ const Inicio = () => {
                     </div>
                 </div>
             </div>
+
 
         </>
     )
