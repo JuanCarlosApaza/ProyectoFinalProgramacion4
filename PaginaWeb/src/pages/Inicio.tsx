@@ -11,8 +11,11 @@ const Inicio = () => {
                         <div className="flex items-center">
                             <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-none md:mb-4">
                                 WIKIGEEK
+
                             </h1>
                             <img src="/Inicio/logo2.png" alt="Logo Wikigeek" className="h-14 md:h-24 lg:h-32" />
+                        <Link className="justify-end " to="/IA">
+                        IA</Link>
                         </div>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-none mb-0 font-exo whitespace-nowrap">
                             El catálogo más <br />
@@ -61,7 +64,7 @@ const Inicio = () => {
                                         transition-all duration-500 ease-out hover:z-50 hover:scale-125 hover:-translate-y-8 hover:shadow-2xl"
                                 />
                             </Link>
-                            <Link to="/IA">
+                            <Link to="/peliculas">
                                 <img 
                                     src="/Inicio/img1.jpg" 
                                     alt="imagen1" 
