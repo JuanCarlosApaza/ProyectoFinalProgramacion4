@@ -1,8 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
+  content: [
+    "./fuentes.html",
+    "./src/**/*.{js,ts,jsx,tsx}", 
+  ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        exo: ['"Exo 2"', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
