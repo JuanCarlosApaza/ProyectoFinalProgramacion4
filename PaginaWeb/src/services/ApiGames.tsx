@@ -3,10 +3,11 @@ import { MediaDetail, Model } from "../Interface/types";
 export const getGames = async (): Promise<Model[] | undefined> => {
   const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
   const clientId = import.meta.env.VITE_REACT_CLIENTID;
+  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
  
   try {
     const response = await fetch(
-      'https://thingproxy.freeboard.io/fetch/https://api.igdb.com/v4/games',
+      `${apiUrl}`,
       {
         method: "POST",
         headers: {
@@ -46,10 +47,11 @@ export const getGames = async (): Promise<Model[] | undefined> => {
 export const getGameById = async (gameId: string): Promise<MediaDetail | undefined> => {
   const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
   const clientId = import.meta.env.VITE_REACT_CLIENTID;
+  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
 
   try {
     const response = await fetch(
-      'https://thingproxy.freeboard.io/fetch/https://api.igdb.com/v4/games',
+      `${apiUrl}`,
       {
         method: "POST",
         headers: {
@@ -99,5 +101,50 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
     return mediaDetail;
   } catch (error) {
     console.error("Error fetching game by ID:", error);
+  }
+};
+
+export const getGamesName = async (nombre:string): Promise<Model[] | undefined> => {
+  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
+  const clientId = import.meta.env.VITE_REACT_CLIENTID;
+  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
+ 
+  try {
+    const response = await fetch(
+      `${apiUrl}`,
+      {
+        method: "POST",
+        headers: {
+          "Client-ID": clientId,
+          "Authorization": `Bearer ${accessToken}`,
+          'Accept': 'application/json',
+          'Content-Type': 'text/plain'
+        },
+        body:
+          `search "${nombre}";fields name, summary, cover.image_id, first_release_date, rating;limit 5;`
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error fetching games: " + response.statusText);
+    }
+
+    const data = await response.json();
+    console.log("Juego",data)
+    const games: Model[] = data.map((game: any) => ({
+      id: game.id,
+      title: game.name,
+      release_date: game.first_release_date
+        ? new Date(game.first_release_date * 1000).toISOString().split("T")[0]
+        : "Fecha desconocida",
+      summary: game.summary,
+      rating: game.rating,
+      img: game.cover
+        ? `${game.cover.image_id}.jpg`
+        : "",
+    }));
+    return games;
+  } catch (error) {
+    console.error("Error fetching games:", error);
   }
 };

@@ -94,3 +94,31 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
     return null;
   }
 };
+
+export const buscarNombrePeli= async (nombre:string)=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE2;
+  const ApiKey=import.meta.env.VITE_REACT_API_KEY_MOVIE;
+  try {
+    const response = await fetch(`${ApiUrl}?api_key=${ApiKey}&query=${nombre}`);
+    
+    if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const Movie:Model[]=data.results.map((movie:any)=>({
+      id: movie.id,
+      title: movie.title || data.name,
+      release_date:movie.release_date || data.first_air_date,
+      summary: movie.overview,
+      rating: movie.vote_average,
+      img:movie.poster_path
+    }))
+
+    return Movie;
+
+} catch (error) {
+    console.error(`Error obteniendo los datos:`, error);
+    return [];
+}
+}

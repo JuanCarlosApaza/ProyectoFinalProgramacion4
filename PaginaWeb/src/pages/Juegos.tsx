@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getGames } from "../services/ApiGames";
+import { getGames, getGamesName } from "../services/ApiGames";
 import { Model } from "../Interface/types";
 import Card from "../components/Card";
 import { LoadingSpinner } from "../components/Loading";
@@ -7,6 +7,7 @@ import { LoadingSpinner } from "../components/Loading";
 const Juegos = () => {
   const [games, setGames] = useState<Model[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const cargarJuegos = async () => {
     try {
@@ -19,7 +20,20 @@ const Juegos = () => {
       setLoading(false);
     }
   };
-
+  const buscarJuegos = async () => {
+    if (!searchTerm.trim()) return cargarJuegos();
+      setLoading(true);
+      try {
+        const data = await getGamesName(searchTerm);
+        if (!data) return;// Evitar búsquedas vacías
+        console.log("a",data)
+        setGames(data);
+      } catch (error) {
+        console.error("Error buscando películas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
   useEffect(() => {
     cargarJuegos();
   }, []);
@@ -27,6 +41,21 @@ const Juegos = () => {
   return (
     <div className="container mx-auto">
       <h2 className="text-xl font-bold mb-4">Juegos Populares</h2>
+      <div className="mb-4 flex gap-2">
+        <input
+          type="text"
+          placeholder="Buscar películas..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 w-full"
+        />
+        <button
+          onClick={buscarJuegos}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Buscar
+        </button>
+      </div>
 
       {loading ? (
         <LoadingSpinner text="Cargando Juegos"/>
