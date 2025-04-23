@@ -6,9 +6,14 @@ import { MediaDetail,Model } from "../Interface/types"; // Asegúrate que este e
 //latest	Última película agregada (solo una, no es lista)
 export const getMovies = async (parametro: string)=> {
     const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
-    const ApiKey=import.meta.env.VITE_REACT_API_KEY_MOVIE;
+    const Token=import.meta.env.VITE_REACT_API_TOKEN;
     try {
-        const response = await fetch(`${ApiUrl}/${parametro}?api_key=${ApiKey}`);
+      const response = await fetch(`${ApiUrl}/${parametro}`, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      });
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
@@ -34,14 +39,22 @@ export const getMovies = async (parametro: string)=> {
 
 export const getMovieDetails = async (id: string, parametros: string = "videos"): Promise<MediaDetail | null> => {
   const ApiUrl = import.meta.env.VITE_REACT_API_URL_MOVIE;
-  const ApiKey = import.meta.env.VITE_REACT_API_KEY_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
 
   try {
-    const response = await fetch(
-      `${ApiUrl}/${id}?api_key=${ApiKey}&append_to_response=${parametros}`
-    );
+    const response = await fetch(`${ApiUrl}/${id}?append_to_response=${parametros}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
     const providersRes = await fetch(
-      `${ApiUrl}/${id}/watch/providers?api_key=${ApiKey}`
+      `${ApiUrl}/${id}/watch/providers`,{
+        headers: {
+          Authorization: `Bearer ${Token}`,
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      }
     );
     let platformsE: string[] = [];  // Aquí solo guardamos los nombres de las plataformas
     
@@ -97,9 +110,14 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
 
 export const buscarNombrePeli= async (nombre:string)=>{
   const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE2;
-  const ApiKey=import.meta.env.VITE_REACT_API_KEY_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
   try {
-    const response = await fetch(`${ApiUrl}?api_key=${ApiKey}&query=${nombre}`);
+    const response = await fetch(`${ApiUrl}?query=${nombre}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
     
     if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status}`);

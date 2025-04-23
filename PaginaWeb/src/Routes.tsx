@@ -15,7 +15,7 @@ const Rutas = () => {
         <Route path="/Movies" element={<Peliculas/>} />
         <Route path="/Movies/:id" element={<MediaDetailView 
         pagina="pelicula" 
-        baseImg="https://image.tmdb.org/t/p/w500"/>} />
+        baseImg="https://image.tmdb.org/t/p/original"/>} />
         <Route path="/Games" element={<Juegos/>}/>
         <Route path="/Games/:id" element={<MediaDetailView 
         pagina="Juegos"/>} />
