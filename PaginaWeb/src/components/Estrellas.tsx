@@ -7,10 +7,11 @@ import Swal from "sweetalert2";
 interface EstrellaProps {
   userId: string;
   contenido: string;
+  categoria: string;
   enviado?: (valor: boolean) => void; 
 }
 
-const Stars: React.FC<EstrellaProps> = ({ userId, contenido , enviado}) => {
+const Stars: React.FC<EstrellaProps> = ({ userId, contenido , enviado ,categoria}) => {
   const [puntuacion, setPuntuacion] = useState(0);
   const opciones = [
     { valor: 1, icono: Star },
@@ -23,9 +24,11 @@ const Stars: React.FC<EstrellaProps> = ({ userId, contenido , enviado}) => {
     setPuntuacion(valor); 
     try {
       const estrella: Omit<Estrellas, "id"> = {
+        categoria: categoria,
         userId: userId,
         contenido: contenido,
         contador: valor,
+        date: new Date(),
       };
       await addEstrella(estrella); 
       Swal.fire({
@@ -46,7 +49,7 @@ const Stars: React.FC<EstrellaProps> = ({ userId, contenido , enviado}) => {
   };
 
   return (
-    <div className="bg-gray-900 flex flex-row justify-center items-center gap-2 p-4 rounded-lg">
+    <div className=" flex flex-row justify-center items-center gap-2 p-4 rounded-lg">
     
       {
         opciones.map((opcion: any) => {

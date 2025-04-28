@@ -12,7 +12,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
             <img
                 src={item.img.startsWith("http") ? item.img : `${imageBaseUrl}${item.img}`}
                 alt={item.title}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                style={{ width: "100%", height: page ==="Books"? "350px":"100%", objectFit: "cover"   }}
             />
             ) : (
             <div className="flex h-full w-full items-center justify-center bg-muted">

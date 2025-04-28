@@ -6,10 +6,10 @@ const GenresBox = ({ genre, onSearch }: PropGenres) => {
 
 
   return (
-    <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 px-4 py-6 bg-gradient-to-b from-black via-zinc-900 to-transparent">
+    <div >
       {/* Select de Géneros */}
       <select
-        className="bg-zinc-800 text-white px-4 py-2 rounded-2xl shadow-md focus:outline-none"
+        className=" text-white   px-6 py-2 rounded-xl shadow-md focus:outline-none "
         value={idGenre}
         onChange={(e) => {
           const selectedId = Number(e.target.value);
@@ -17,9 +17,9 @@ const GenresBox = ({ genre, onSearch }: PropGenres) => {
           onSearch(selectedId); // Llamar a la función
         }}
       >
-        <option value="">Todos los géneros</option>
+        <option value="" className="p-4">Todos los géneros</option>
         {genre.map((genre) => (
-          <option key={genre.id} value={genre.id}>
+          <option className="text-black" key={genre.id} value={genre.id}>
             {genre.name}
           </option>
         ))}

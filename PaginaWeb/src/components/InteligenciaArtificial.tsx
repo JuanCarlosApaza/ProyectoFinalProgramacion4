@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Busqueda from "./BuscarNombre";
 import imagen1 from "../../public/IA/daysgone.jpg";
 import imagen2 from "../../public/IA/thelastofus.jpg";
@@ -16,8 +16,9 @@ const GeminiTest = () => {
   const [pregunta, setPregunta] = useState("");
   const [enviado, setEnviado] = useState(false);
   const [filtro, setFiltro] = useState("");
-  const {usuario} = useAuth(); 
+  const { usuario } = useAuth();
   const [estrellas, setEstrellas] = useState(false);
+  const [categoria, setCategoria] = useState<string>("");
 
   const apikey = import.meta.env.VITE_REACT_APP_API_KEY;
 
@@ -25,9 +26,9 @@ const GeminiTest = () => {
     const match = texto.match(/\(([^)]+)\)/);
     return match ? match[1] : "No se encontró el nombre entre paréntesis";
   };
-  const recibido = (valor:boolean)=> {
+  const recibido = (valor: boolean) => {
     setEstrellas(valor);
-  }
+  };
 
   useEffect(() => {
     const callGeminiAPI = async () => {
@@ -44,7 +45,7 @@ const GeminiTest = () => {
                 {
                   parts: [
                     {
-                      text: `A continuación te daré una descripción de una película. Solo necesito que respondas con el nombre original de la saga en inglés entre paréntesis , seguido de una descripción detallada de la película en un solo bloque de texto (unas 4 a 6 líneas). No hagas preguntas ni incluyas información irrelevante. Descripción: ${pregunta}`,
+                      text: `A continuación te daré una descripción de una ${categoria}. Solo necesito que respondas con el nombre original de la saga en español entre paréntesis , seguido de una descripción detallada de la ${categoria} en un solo bloque de texto (unas 4 a 6 líneas). No hagas preguntas ni incluyas información irrelevante. Descripción: ${pregunta}`,
                     },
                   ],
                 },
@@ -52,14 +53,13 @@ const GeminiTest = () => {
             }),
           }
         );
-  
+
         const data = await res.json();
         const text =
           data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta";
         setResponse(text);
         setFiltro(extraerParentesis(text));
         setEstrellas(true);
-        
       } catch (error) {
         setResponse("Ocurrió un error al consultar la API.");
         setFiltro("Error");
@@ -68,26 +68,44 @@ const GeminiTest = () => {
         setEnviado(false);
       }
     };
-  
+
     if (enviado) {
       callGeminiAPI();
-      
     }
-    
   }, [enviado, apikey, pregunta]);
-  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEnviado(true);
   };
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setCategoria(event.target.value);
+  };
 
   return (
     <div>
       <Navbar>
-        <div className="text-center mx-auto mb-16 flex justify-center">
-          <h1 className="text-white text-3xl font-bold">WIKIGEEK</h1>
-          <img src={icono} className="ml-4 " alt="" />
+        <div className="text-center mx-auto mb-16 flex flex-col items-center justify-center">
+          <div className="flex">
+            <h1 className="text-white text-4xl sm:text-5xl font-extrabold mb-4">
+            WIKIGEEK
+          </h1>
+
+            <img
+              src={icono}
+              className="w-10 sm:w-12 md:w-14 ml-2"
+              alt="Ícono de Wikigeek"
+            />
+            <h1 className="text-white mt-5">IA</h1>
+          </div>
+          
+
+          <p className="text-lg sm:text-xl md:text-xl text-white max-w-3xl mx-auto leading-relaxed">
+            Selecciona el género que deseas, y nuestra inteligencia artificial
+            se encargará de buscar el contenido más relevante para ti. Podrás
+            explorar los detalles completos y acceder fácilmente a cada uno de
+            ellos.
+          </p>
         </div>
 
         <div className="mb-4 items-center justify-center text-center flex relative">
@@ -117,7 +135,21 @@ const GeminiTest = () => {
             className="opacity-100 -ml-10 mt-10 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
           />
         </div>
-        <div className="items-center justify-center text-center mb-4 ">
+
+        <div className="items-center justify-center text-center mb-4 w-[100%]  ">
+          <div>
+            <select
+              value={categoria}
+              onChange={handleChange}
+              className="bg-white w-[12%] justify-center text-center mx-auto m-4 p-2 rounded-2xl"
+            >
+              <option value="">Selecciona una Opcion</option>
+              <option value="peliculas">Peliculas</option>
+              <option value="juegos">Juegos</option>
+              <option value="libros">Libros</option>
+            </select>
+          </div>
+
           <form
             onSubmit={handleSubmit}
             className="flex items-center justify-center gap-4 mb-6"
@@ -139,9 +171,16 @@ const GeminiTest = () => {
             </button>
           </form>
         </div>
-        {estrellas&&<Stars userId={usuario?.displayName??"anonimo"} contenido={filtro??"probando"} enviado={recibido} />}
+        {estrellas && (
+          <Stars
+            userId={usuario?.displayName ?? "anonimo"}
+            contenido={filtro ?? "probando"}
+            enviado={recibido}
+            categoria={categoria}
+          />
+        )}
 
-        <Busqueda categoria="peliculas" nombre={filtro} />
+        <Busqueda categoria={categoria} nombre={filtro} />
       </Navbar>
     </div>
   );

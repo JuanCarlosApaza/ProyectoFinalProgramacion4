@@ -64,6 +64,14 @@ const Navbar: React.FC<Navbarprops> = ({ children }) => {
                 Libros
               </Link>
             </li>
+            <li>
+              <Link
+                to="/administrar"
+                className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md transition-all"
+              >
+                Administrar
+              </Link>
+            </li>
             <Link
               to="/IA"
               className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md flex items-center gap-2 transition-all"

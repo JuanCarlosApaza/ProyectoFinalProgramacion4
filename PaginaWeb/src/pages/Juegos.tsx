@@ -5,7 +5,7 @@ import Card from "../components/Card";
 import { LoadingSpinner } from "../components/Loading";
 import Navbar from "../utils/Navbar";
 import GenresBox from "../components/GenresBox";
-
+import { Search } from "lucide-react";
 
 const Juegos = () => {
   const [games, setGames] = useState<Model[]>([]);
@@ -60,23 +60,26 @@ const Juegos = () => {
         
 
     <div className="container mx-auto">
-      <h2 className="text-xl font-bold mb-4">Juegos Populares</h2>
-      <GenresBox genre={genres} onSearch={cargarJuegos} />
-      <div className="mb-4 flex gap-2">
+      <div className="flex justify-between">
+        <GenresBox genre={genres} onSearch={cargarJuegos} />
+      <div className="mb-4 flex gap-2 w-[60%]">
         <input
           type="text"
           placeholder="Buscar películas..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded px-4 py-2 w-full"
+          className="border border-gray-300 bg-white rounded px-4 py-2 w-full"
         />
         <button
           onClick={buscarJuegos}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="  px-4 py-2  border border-gray-300 rounded-full text-white hover:text-black hover:bg-white"
+
         >
-          Buscar
+          <Search/>
         </button>
       </div>
+      </div>
+      
 
 
         {loading ? (

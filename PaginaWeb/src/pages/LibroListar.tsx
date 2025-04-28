@@ -4,10 +4,10 @@ import { Model } from "../Interface/types";
 import { LoadingSpinner } from "../components/Loading";
 import Card from "../components/Card";
 import Navbar from "../utils/Navbar";
-
+import { Search } from "lucide-react";
 const LibroLeer = () => {
   const [titulo, setTitulo] = useState("Historia");
-  const [query, setQuery] = useState("Historia");
+  const [query, setQuery] = useState("");
   const [Libros, setLibros] = useState<Model[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,32 +34,28 @@ const LibroLeer = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
+ 
 
   return (
     <div>
       <Navbar>
         <div className="container mx-auto px-4">
-          <h2 className="text-xl font-bold mb-4">Libros</h2>
+          <h1 className="text-2xl text-white font-bold mb-4">Libros</h1>
 
-          <div className="flex mb-6 gap-2">
+          <div className="flex mb-6 gap-2 justify-end">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
               placeholder="Buscar libros..."
-              className="w-full p-2 border rounded"
+              className="w-[60%] p-2 border rounded bg-white "
             />
             <button
               onClick={handleSearch}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Buscar
+              className="  px-4 py-2  border border-gray-300 rounded-full text-white hover:text-black hover:bg-white"
+              >
+            
+              <Search/>
             </button>
           </div>
 

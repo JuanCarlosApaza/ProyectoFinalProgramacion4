@@ -3,4 +3,6 @@ export interface Estrellas {
     contenido: string;
     userId: string;
     contador: number;
+    categoria: string;
+    date: Date;
 }
