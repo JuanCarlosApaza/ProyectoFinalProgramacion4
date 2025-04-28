@@ -13,6 +13,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 const Rutas = () => {
   return (
+<<<<<<< HEAD
     <AuthProvider> 
       <BrowserRouter>
         <Routes>
@@ -31,6 +32,22 @@ const Rutas = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+=======
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Inicio/>} />
+        <Route path="/IA" element={<GeminiTest/>} />
+        <Route path="/Movies" element={<Peliculas/>} />
+        <Route path="/Movies/:id" element={<MediaDetailView 
+        pagina="pelicula" 
+        baseImg="https://image.tmdb.org/t/p/original"/>} />
+        <Route path="/Games" element={<Juegos/>}/>
+        <Route path="/Games/:id" element={<MediaDetailView 
+        pagina="Juegos"/>} />
+        <Route path="/Books" element={<Libros/>}/>
+      </Routes>
+    </BrowserRouter>
+>>>>>>> pr-4
   );
 };
 

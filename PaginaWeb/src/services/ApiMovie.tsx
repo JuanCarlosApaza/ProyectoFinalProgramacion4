@@ -1,5 +1,6 @@
 
-import { MediaDetail, Model } from "../Interface/types";
+import { Genre, MediaDetail,Model } from "../Interface/types"; 
+
 
 export const getMovies2 = async (parametro: string) => {
   const ApiUrl = import.meta.env.VITE_REACT_API_URL_PELICULAS2; 
@@ -30,11 +31,17 @@ export const getMovies2 = async (parametro: string) => {
 };
 
 
+
 export const getMovies = async (parametro: string)=> {
     const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
-    const ApiKey=import.meta.env.VITE_REACT_API_KEY_MOVIE;
+    const Token=import.meta.env.VITE_REACT_API_TOKEN;
     try {
-        const response = await fetch(`${ApiUrl}/${parametro}?api_key=${ApiKey}`);
+      const response = await fetch(`${ApiUrl}/movie/${parametro}`, {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      });
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
@@ -60,14 +67,22 @@ export const getMovies = async (parametro: string)=> {
 
 export const getMovieDetails = async (id: string, parametros: string = "videos"): Promise<MediaDetail | null> => {
   const ApiUrl = import.meta.env.VITE_REACT_API_URL_MOVIE;
-  const ApiKey = import.meta.env.VITE_REACT_API_KEY_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
 
   try {
-    const response = await fetch(
-      `${ApiUrl}/${id}?api_key=${ApiKey}&append_to_response=${parametros}`
-    );
+    const response = await fetch(`${ApiUrl}/movie/${id}?append_to_response=${parametros}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
     const providersRes = await fetch(
-      `${ApiUrl}/${id}/watch/providers?api_key=${ApiKey}`
+      `${ApiUrl}/movie/${id}/watch/providers`,{
+        headers: {
+          Authorization: `Bearer ${Token}`,
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      }
     );
     let platformsE: string[] = [];  // Aquí solo guardamos los nombres de las plataformas
     
@@ -121,3 +136,90 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
   }
 };
 
+export const buscarNombrePeli= async (nombre:string)=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
+  try {
+    const response = await fetch(`${ApiUrl}/search/movie?query=${nombre}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const Movie:Model[]=data.results.map((movie:any)=>({
+      id: movie.id,
+      title: movie.title || data.name,
+      release_date:movie.release_date || data.first_air_date,
+      summary: movie.overview,
+      rating: movie.vote_average,
+      img:movie.poster_path
+    }))
+
+    return Movie;
+
+  } catch (error) {
+    console.error(`Error obteniendo los datos:`, error);
+    return [];
+  }
+}
+
+export const getGenres=async()=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
+  try{
+    const response = await fetch(`${ApiUrl}/genre/movie/list?language=es-ES`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);}
+      const data = await response.json();
+      const genres: Genre[] = data.genres.map((g: any) => ({
+        id: g.id,
+        name: g.name,
+      }));
+    return genres;
+  }catch(error){
+    console.error(`Error obteniendo los generos:`, error);
+    return [];
+  }
+}
+
+export const searchGenres=async(id:number)=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
+  try{
+    const response = await fetch(`${ApiUrl}/discover/movie?language=es-ES&with_genres=${id}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const Movie:Model[]=data.results.map((movie:any)=>({
+      id: movie.id,
+      title: movie.title || data.name,
+      release_date:movie.release_date || data.first_air_date,
+      summary: movie.overview,
+      rating: movie.vote_average,
+      img:movie.poster_path
+    }))
+
+    return Movie;
+  }catch(error){
+    console.error(`Error obteniendo los generos:`, error);
+    return [];
+  }
+}

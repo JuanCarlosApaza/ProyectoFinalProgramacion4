@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, MessageSquare, Menu, X } from "lucide-react";
 import logo2 from "../../public/Inicio/logo2.png";
+import { useAuth } from "../context/AuthContext";
+import LogoutButton from "../components/CerrarSession";
 
 interface Navbarprops {
   children: React.ReactNode;
@@ -10,23 +12,23 @@ interface Navbarprops {
 const Navbar: React.FC<Navbarprops> = ({ children }) => {
   const [] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { usuario } = useAuth();
 
   return (
     <>
       <nav className="w-full bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white px-6 py-6 shadow-md shadow-black/40 z-50">
         <div className="flex items-center justify-between">
           <Link to={"/"}>
-          <div className="flex items-center gap-2">
-            <h1 className="pb-6 text-2xl font-bold text-white">WIKIGEEK</h1>
-            <img
-              src={logo2}
-              alt="Logo bigote"
-              className="w-20 h-20 object-contain"
-            />
-          </div>
+            <div className="flex items-center gap-2">
+              <h1 className="pb-6 text-2xl font-bold text-white">WIKIGEEK</h1>
+              <img
+                src={logo2}
+                alt="Logo bigote"
+                className="w-20 h-20 object-contain"
+              />
+            </div>
           </Link>
           {/* Logo y título */}
-          
 
           {/* Icono hamburguesa (solo móvil) */}
           <button
@@ -68,18 +70,19 @@ const Navbar: React.FC<Navbarprops> = ({ children }) => {
             >
               Búsqueda por IA <MessageSquare size={16} />
             </Link>
-            <Link
-              to="/login"
-              className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md flex items-center gap-2 transition-all"
-            >
-              Iniciar Session <MessageSquare size={16} />
-            </Link>
-            <Link
-              to="/estrellas"
-              className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md flex items-center gap-2 transition-all"
-            >
-              Estrellas <MessageSquare size={16} />
-            </Link>
+
+            {usuario ? (
+              <div className="bg-gray-900  border border-gray-800 px-4 py-2 rounded-md flex items-center gap-2 transition-all">
+                {usuario.displayName} <LogoutButton/>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md flex items-center gap-2 transition-all"
+              >
+                Iniciar Session
+              </Link>
+            )}
           </ul>
         </div>
 

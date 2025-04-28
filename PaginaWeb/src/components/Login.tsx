@@ -35,8 +35,7 @@ const Login: React.FC = () => {
       });
       
   
-      // const nombreUsuario = auth.currentUser?.displayName;
-      navigate(`/pruebas`);
+      navigate(`/`);
   
       console.log("Usuario Logueado con éxito");
     } catch (error) {

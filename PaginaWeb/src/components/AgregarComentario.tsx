@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addComentario } from "../services/ComentariosServices";
 import { Comentarios } from "../Interface/Comentarios";
+import Swal from "sweetalert2";
 interface CrearComentarioProps {
     contentId:string;
     userId:string;
@@ -31,7 +32,11 @@ const CrearComentario:React.FC<CrearComentarioProps> = ({contentId, userId,usuar
             await addComentario(nuevoComentario);
 
             setComentario("");
-            alert("Comentario creado con exito");
+            Swal.fire({
+                title: "Gracias por comentar!",
+                icon: "success",
+                draggable: true
+              });
             accion();
         } catch (error) {
             console.error("Error al crear el comentario: ", error);
