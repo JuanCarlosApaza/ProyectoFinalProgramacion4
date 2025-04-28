@@ -20,10 +20,8 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
             </div>
             )}
 
-            {/* Overlay oscuro */}
             <div className="absolute inset-0 bg-black/70 opacity-0 transition-opacity group-hover:opacity-100"></div>
 
-            {/* Título e info */}
             <div className="absolute bottom-0 w-full p-3 text-white z-10">
             <h3 className="font-bold truncate transition-opacity group-hover:opacity-0">
                 {item.title}
@@ -54,6 +52,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
                         {item.rating && <div>★ {item.rating.toFixed(1)}</div>}
                         <button className='text-black rounded-2xl bg-white hover:bg-gray-500 p-1'
                         onClick={()=>{
+                            console.log("pagina y item id",page,item.id);
                             nav(`/${page}/${item.id}`)
                         }}
                         >Mas detalles</button>

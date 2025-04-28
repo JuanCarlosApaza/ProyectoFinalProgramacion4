@@ -7,12 +7,17 @@ import imagen4 from "../../public/IA/coraline.jpg";
 import imagen5 from "../../public/IA/troya.jpg";
 import { Search } from "lucide-react";
 import icono from "../../public/Inicio/logo1.png";
+import Navbar from "../utils/Navbar";
+import Stars from "./Estrellas";
+import { useAuth } from "../context/AuthContext";
 
 const GeminiTest = () => {
-  const [response, setResponse] = useState("");
+  const [, setResponse] = useState("");
   const [pregunta, setPregunta] = useState("");
   const [enviado, setEnviado] = useState(false);
   const [filtro, setFiltro] = useState("");
+  const {usuario} = useAuth(); 
+  const [estrellas, setEstrellas] = useState(false);
 
   const apikey = import.meta.env.VITE_REACT_APP_API_KEY;
 
@@ -20,6 +25,9 @@ const GeminiTest = () => {
     const match = texto.match(/\(([^)]+)\)/);
     return match ? match[1] : "No se encontró el nombre entre paréntesis";
   };
+  const recibido = (valor:boolean)=> {
+    setEstrellas(valor);
+  }
 
   useEffect(() => {
     const callGeminiAPI = async () => {
@@ -44,12 +52,14 @@ const GeminiTest = () => {
             }),
           }
         );
-
+  
         const data = await res.json();
         const text =
           data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta";
         setResponse(text);
         setFiltro(extraerParentesis(text));
+        setEstrellas(true);
+        
       } catch (error) {
         setResponse("Ocurrió un error al consultar la API.");
         setFiltro("Error");
@@ -58,11 +68,14 @@ const GeminiTest = () => {
         setEnviado(false);
       }
     };
-
+  
     if (enviado) {
       callGeminiAPI();
+      
     }
+    
   }, [enviado, apikey, pregunta]);
+  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,63 +83,66 @@ const GeminiTest = () => {
   };
 
   return (
-    <div className="p-8 font-sans bg-black ">
-      <div className="text-center mx-auto mb-16 flex justify-center">
-        <h1 className="text-white text-3xl font-bold">WIKIGEEK</h1>
-        <img src={icono} className="ml-4 " alt="" />
-      </div>
+    <div>
+      <Navbar>
+        <div className="text-center mx-auto mb-16 flex justify-center">
+          <h1 className="text-white text-3xl font-bold">WIKIGEEK</h1>
+          <img src={icono} className="ml-4 " alt="" />
+        </div>
 
-      <div className="mb-4 items-center justify-center text-center flex relative">
-        <img
-          src={imagen3}
-          alt=""
-          className="opacity-100 -mr-10 mt-8 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-        />
-        <img
-          src={imagen4}
-          alt=""
-          className="opacity-90 -mr-20 -mt-4 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-        />
-        <img
-          src={imagen1}
-          alt=""
-          className="opacity-95 z-30 w-48 -mt-14 rounded-lg transition-all duration-500 ease-out hover:scale-110 hover:z-50"
-        />
-        <img
-          src={imagen2}
-          alt=""
-          className="opacity-90 -ml-20 -mt-3 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-        />
-        <img
-          src={imagen5}
-          alt=""
-          className="opacity-100 -ml-10 mt-10 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-        />
-      </div>
-      <div className="items-center justify-center text-center mb-4 ">
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center justify-center gap-4 mb-6"
-        >
-          <input
-            type="text"
-            name="pregunta"
-            id="pregunta"
-            value={pregunta}
-            onChange={(e) => setPregunta(e.target.value)}
-            className="lg:w-[25%] p-4 border border-black rounded-2xl text-black bg-white w-full"
-            placeholder="Ej. Un joven mago asiste a una escuela mágica..."
+        <div className="mb-4 items-center justify-center text-center flex relative">
+          <img
+            src={imagen3}
+            alt=""
+            className="opacity-100 -mr-10 mt-8 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
           />
-          <button
-            type="submit"
-            className="bg-white text-white px-4 border border-black py-4 rounded-full hover:bg-black hover:border-white transition-colors duration-300"
+          <img
+            src={imagen4}
+            alt=""
+            className="opacity-90 -mr-20 -mt-4 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
+          />
+          <img
+            src={imagen1}
+            alt=""
+            className="opacity-95 z-30 w-48 -mt-14 rounded-lg transition-all duration-500 ease-out hover:scale-110 hover:z-50"
+          />
+          <img
+            src={imagen2}
+            alt=""
+            className="opacity-90 -ml-20 -mt-3 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
+          />
+          <img
+            src={imagen5}
+            alt=""
+            className="opacity-100 -ml-10 mt-10 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
+          />
+        </div>
+        <div className="items-center justify-center text-center mb-4 ">
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center justify-center gap-4 mb-6"
           >
-            <Search className="w-8 h-6 text-black hover:text-white " />
-          </button>
-        </form>
-      </div>
+            <input
+              type="text"
+              name="pregunta"
+              id="pregunta"
+              value={pregunta}
+              onChange={(e) => setPregunta(e.target.value)}
+              className="lg:w-[25%] p-4 border border-black rounded-2xl text-black bg-white w-full"
+              placeholder="Ej. Un joven mago asiste a una escuela mágica..."
+            />
+            <button
+              type="submit"
+              className="bg-white text-white px-4 border border-black py-4 rounded-full hover:bg-black hover:border-white transition-colors duration-300"
+            >
+              <Search className="w-8 h-6 text-black hover:text-white " />
+            </button>
+          </form>
+        </div>
+        {estrellas&&<Stars userId={usuario?.displayName??"anonimo"} contenido={filtro??"probando"} enviado={recibido} />}
 
-      <Busqueda categoria="peliculas" nombre={filtro} />
+        <Busqueda categoria="peliculas" nombre={filtro} />
+      </Navbar>
     </div>
   );
 };

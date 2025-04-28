@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { Movie } from "../interfaces/Movie";
+
 import { getMovies2 } from "../services/ApiMovie";
 import Card from "./Card";
-import { Buscar } from "../interfaces/Buscar";
+import { Buscar } from "../Interface/Buscar";
+import { Model } from "../Interface/types";
 
 const Busqueda:React.FC<Buscar> = ({categoria,nombre}) => {
-  const [movies, setBuscar] = useState<Movie[]>([]);
+  const [movies, setBuscar] = useState<Model[]>([]);
   const cargarDatos = async () => {
     try {
       if (categoria === "peliculas") {
         const data = await getMovies2(nombre);
-        setBuscar(data.results);
-        console.log(data.results);
+        setBuscar(data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -32,6 +32,7 @@ const Busqueda:React.FC<Buscar> = ({categoria,nombre}) => {
             showOverview={true}
             containerClass="custom-container"
             aspectRatioClass="aspect-ratio-16/9"
+            page='Movies'
           />
         ))}
       </div>

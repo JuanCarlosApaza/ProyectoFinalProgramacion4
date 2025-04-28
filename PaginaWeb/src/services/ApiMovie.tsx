@@ -1,10 +1,9 @@
 
-import { Model } from "../Interface/types";
-import { MediaDetail } from "../interfaces/Movie"; // Asegúrate que este esté bien tipado
+import { MediaDetail, Model } from "../Interface/types";
 
 export const getMovies2 = async (parametro: string) => {
   const ApiUrl = import.meta.env.VITE_REACT_API_URL_PELICULAS2; 
-  const ApiKey = import.meta.env.VITE_REACT_API_KEY_LIBROS;
+  const ApiKey = import.meta.env.VITE_REACT_API_KEY_MOVIE;
 
   try {
     const response = await fetch(`${ApiUrl}?query=${parametro}&api_key=${ApiKey}&language=es-ES`);
@@ -14,9 +13,16 @@ export const getMovies2 = async (parametro: string) => {
     }
 
     const data = await response.json();
-    console.log(data);
+    const Movie:Model[]=data.results.map((movie:any)=>({
+      id: movie.id,
+      title: movie.title || data.name,
+      release_date:movie.release_date || data.first_air_date,
+      summary: movie.overview,
+      rating: movie.vote_average,
+      img:movie.poster_path
+    }))
 
-    return data; 
+    return Movie;
   } catch (error) {
     console.error(`Error obteniendo los datos:`, error);
     return [];
