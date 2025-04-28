@@ -1,20 +1,30 @@
 import { useEffect, useState } from 'react';
-import { getMovies, buscarNombrePeli } from '../services/ApiMovie';
-import { Model } from '../Interface/types';
+import { getMovies, buscarNombrePeli,getGenres,searchGenres } from '../services/ApiMovie';
+import { Genre, Model } from '../Interface/types';
 import Card from '../components/Card';
 import { LoadingSpinner } from '../components/Loading';
+import GenresBox from '../components/GenresBox';
 
 const Peliculas = () => {
   const [movies, setMovies] = useState<Model[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(''); // valor de la busqueda búsqueda
+  const [genres, setGenres] = useState<Genre[]>([])
 
-  const cargarPeliculas = async () => {
+  const cargarPeliculas = async (idgenre?: number) => {
     try {
-      const data = await getMovies('popular');
-      if (!data) return;
+      let data: Model[] = [];
+      if (idgenre) {
+        data = await searchGenres(idgenre);
+        if (!data) return;
+      } else {
+        data = await getMovies('popular');
+        if (!data) return;
+      }
       setMovies(data);
-      console.log(data);
+      const genre = await getGenres();
+      if (!genre) return;
+      setGenres(genre);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -28,7 +38,7 @@ const Peliculas = () => {
     try {
       const data = await buscarNombrePeli(searchTerm);
       if (!data) return;// Evitar búsquedas vacías
-      console.log("a",data)
+
       setMovies(data);
     } catch (error) {
       console.error("Error buscando películas:", error);
@@ -44,7 +54,7 @@ const Peliculas = () => {
   return (
     <div className="container mx-auto">
       <h2 className="text-xl font-bold mb-4">Películas Populares</h2>
-
+      <GenresBox genre={genres} onSearch={cargarPeliculas}/>
       {/* Input para buscar */}
       <div className="mb-4 flex gap-2">
         <input

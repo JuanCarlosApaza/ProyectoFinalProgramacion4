@@ -1,4 +1,4 @@
-import { MediaDetail,Model } from "../Interface/types"; // Asegúrate que este esté bien tipado
+import { Genre, MediaDetail,Model } from "../Interface/types"; // Asegúrate que este esté bien tipado
 //parametros que puedes usar    popular	Las películas más populares actualmente
 //top_rated	Películas con mejor puntuación
 //upcoming	Películas que aún no se han estrenado
@@ -8,7 +8,7 @@ export const getMovies = async (parametro: string)=> {
     const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
     const Token=import.meta.env.VITE_REACT_API_TOKEN;
     try {
-      const response = await fetch(`${ApiUrl}/${parametro}`, {
+      const response = await fetch(`${ApiUrl}/movie/${parametro}`, {
         headers: {
           Authorization: `Bearer ${Token}`,
           "Content-Type": "application/json;charset=utf-8"
@@ -42,14 +42,14 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
   const Token=import.meta.env.VITE_REACT_API_TOKEN;
 
   try {
-    const response = await fetch(`${ApiUrl}/${id}?append_to_response=${parametros}`, {
+    const response = await fetch(`${ApiUrl}/movie/${id}?append_to_response=${parametros}`, {
       headers: {
         Authorization: `Bearer ${Token}`,
         "Content-Type": "application/json;charset=utf-8"
       }
     });
     const providersRes = await fetch(
-      `${ApiUrl}/${id}/watch/providers`,{
+      `${ApiUrl}/movie/${id}/watch/providers`,{
         headers: {
           Authorization: `Bearer ${Token}`,
           "Content-Type": "application/json;charset=utf-8"
@@ -109,10 +109,10 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
 };
 
 export const buscarNombrePeli= async (nombre:string)=>{
-  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE2;
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
   const Token=import.meta.env.VITE_REACT_API_TOKEN;
   try {
-    const response = await fetch(`${ApiUrl}?query=${nombre}`, {
+    const response = await fetch(`${ApiUrl}/search/movie?query=${nombre}`, {
       headers: {
         Authorization: `Bearer ${Token}`,
         "Content-Type": "application/json;charset=utf-8"
@@ -135,8 +135,63 @@ export const buscarNombrePeli= async (nombre:string)=>{
 
     return Movie;
 
-} catch (error) {
+  } catch (error) {
     console.error(`Error obteniendo los datos:`, error);
     return [];
+  }
 }
+
+export const getGenres=async()=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
+  try{
+    const response = await fetch(`${ApiUrl}/genre/movie/list?language=es-ES`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);}
+      const data = await response.json();
+      const genres: Genre[] = data.genres.map((g: any) => ({
+        id: g.id,
+        name: g.name,
+      }));
+    return genres;
+  }catch(error){
+    console.error(`Error obteniendo los generos:`, error);
+    return [];
+  }
+}
+
+export const searchGenres=async(id:number)=>{
+  const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
+  const Token=import.meta.env.VITE_REACT_API_TOKEN;
+  try{
+    const response = await fetch(`${ApiUrl}/discover/movie?language=es-ES&with_genres=${id}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json;charset=utf-8"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const Movie:Model[]=data.results.map((movie:any)=>({
+      id: movie.id,
+      title: movie.title || data.name,
+      release_date:movie.release_date || data.first_air_date,
+      summary: movie.overview,
+      rating: movie.vote_average,
+      img:movie.poster_path
+    }))
+
+    return Movie;
+  }catch(error){
+    console.error(`Error obteniendo los generos:`, error);
+    return [];
+  }
 }

@@ -30,4 +30,13 @@ export interface MediaDetail {
     genres?:string[]
     platforms:string[]
 }
-  
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface PropGenres{
+  genre:Genre[];
+  onSearch: (idgenre:number) => void;
+}

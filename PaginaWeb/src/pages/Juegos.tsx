@@ -1,18 +1,30 @@
 import { useState, useEffect } from "react";
-import { getGames, getGamesName } from "../services/ApiGames";
-import { Model } from "../Interface/types";
+import { getGames, getGamesName,searchGenresG,getGenres } from "../services/ApiGames";
+import { Genre, Model } from "../Interface/types";
 import Card from "../components/Card";
 import { LoadingSpinner } from "../components/Loading";
+import GenresBox from "../components/GenresBox";
 
 const Juegos = () => {
   const [games, setGames] = useState<Model[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [genres, setGenres] = useState<Genre[]>([])
 
-  const cargarJuegos = async () => {
+  const cargarJuegos = async (idgenre?:number) => {
     try {
-      const data = await getGames();
-      if (!data) return;
+      const fetchedGenres =await getGenres();
+      console.log(fetchedGenres)
+      if (!fetchedGenres ) return;
+      setGenres(fetchedGenres )
+      let data: Model[] = [];
+      if(idgenre){
+        data = (await searchGenresG(idgenre)) || []
+      }else{
+        data = (await getGames()) || []
+        if (!data) return;
+      }
+
       setGames(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -21,6 +33,7 @@ const Juegos = () => {
     }
   };
   const buscarJuegos = async () => {
+
     if (!searchTerm.trim()) return cargarJuegos();
       setLoading(true);
       try {
@@ -41,6 +54,7 @@ const Juegos = () => {
   return (
     <div className="container mx-auto">
       <h2 className="text-xl font-bold mb-4">Juegos Populares</h2>
+      <GenresBox genre={genres} onSearch={cargarJuegos} />
       <div className="mb-4 flex gap-2">
         <input
           type="text"
