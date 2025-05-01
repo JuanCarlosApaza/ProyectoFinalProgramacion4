@@ -71,7 +71,13 @@ export function MediaDetailView({ pagina, baseImg }: props) {
   }, [id]);
 
   if (loading) {
-    return <LoadingSpinner text="Cargando...." />;
+    return (
+      <Navbar>
+        <div className="relative w-full h-screen flex items-center justify-center">
+          <LoadingSpinner text="Cargando detalles de la película..." />
+        </div>
+      </Navbar>
+    );
   }
 
   if (error || !detail) {

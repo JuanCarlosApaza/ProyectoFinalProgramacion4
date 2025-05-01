@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getMovies,
-  buscarNombrePeli,
-  getGenres,
-  searchGenres,
-} from "../services/ApiMovie";
+import { getMovies,buscarNombrePeli,getGenres,searchGenres,} from "../services/ApiMovie";
 import { Genre, Model } from "../Interface/types";
 import Card from "../components/Card";
 import { LoadingSpinner } from "../components/Loading";
