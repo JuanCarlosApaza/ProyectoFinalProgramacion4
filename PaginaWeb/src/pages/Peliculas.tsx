@@ -74,7 +74,7 @@ const Peliculas = () => {
               />
               <button
                 onClick={buscarPeliculas}
-                className="  px-4 py-2  border border-gray-300 rounded-full text-white hover:text-black bg-white"
+                className="  px-4 py-2  border border-gray-300 rounded-full text-white hover:text-black bg-black hover:bg-white   "
               >
                 <Search/>
               </button>

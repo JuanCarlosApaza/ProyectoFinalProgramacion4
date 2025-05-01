@@ -50,7 +50,7 @@ export default function GraficoBarras() {
   return (
     <>
       <Navbar>
-        <h1 className="text-white text-center text-3xl">Cantidad de Estrellas</h1>
+        <h1 className="text-white text-center text-3xl">Cantidad de Estrellas por Calidad de IA</h1>
         <div
           style={{
             display: "flex",

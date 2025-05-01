@@ -34,7 +34,7 @@ const Login: React.FC = () => {
         timer: 1500
       });
       
-      navigate(`/pruebas`);
+      navigate(`/`);
   
       console.log("Usuario Logueado con éxito");
     } catch (error) {

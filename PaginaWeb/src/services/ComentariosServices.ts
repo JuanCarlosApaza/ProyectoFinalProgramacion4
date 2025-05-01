@@ -22,6 +22,27 @@ export const getComentarios = async (id:string):Promise<Comentarios[]>=>{
         
     }
 }
+export const updateComentario = async (id: string, comentario: Partial<Comentarios>): Promise<void> => {
+    try {
+        await updateDoc(doc(db, "comentarios", id), comentario);
+    } catch (error) {
+        console.error("Error updating comentario: ", error);
+        throw new Error("Error updating comentario");
+        
+    }
+}
+
+export const DeleteComentario = async (id:string):Promise<void>=>{
+    try {
+        const docRef = doc(db, "comentarios", id);
+        await deleteDoc(docRef);
+
+    } catch (error) {
+        console.error("Error eliminando comentario: ", error);
+        throw new Error("Error deleting comentario");
+        
+    }
+}
 // export const getComentarioById = async (id: string): Promise<Comentarios | null> => {
 //     try {
 //       const q = query(collection(db, "comentarios"), where("contentId", "==", id));

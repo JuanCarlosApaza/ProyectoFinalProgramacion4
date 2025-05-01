@@ -18,20 +18,24 @@ const Busqueda:React.FC<Buscar> = ({categoria,nombre}) => {
         setBuscar(data);
         SetImagen("https://image.tmdb.org/t/p/w500");
         setEnlace("Movies");
+        console.log("peliculas",data)
       }
       else if (categoria === "libros") {
         const data = await listarlibros(nombre);
         setBuscar(data);
         SetImagen("https://covers.openlibrary.org/b/id/");
         setEnlace("Books")
+        console.log("libros",data)
+
       }
       else if (categoria === "juegos") {
         const data = await getGamesName(nombre);
         if (!data) return;
-        console.log("a",data)
         setBuscar(data);
         SetImagen("https://images.igdb.com/igdb/image/upload/t_cover_big/");
         setEnlace("Games")
+        console.log("juegos",data)
+
       }
     } catch (error) {
       console.error("Error fetching data:", error);

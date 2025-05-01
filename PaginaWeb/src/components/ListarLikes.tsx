@@ -7,7 +7,8 @@ import {
 } from "../services/LikeServices";
 import { useEffect, useState } from "react";
 import type { Likes } from "../Interface/Likes";
-
+import { useAuth } from "../context/AuthContext";
+import Swal from "sweetalert2";
 interface LikesProps {
   userId: string;
   contentId: string;
@@ -16,6 +17,7 @@ interface LikesProps {
 const Likes: React.FC<LikesProps> = ({ userId, contentId }) => {
   const [Lik, setLikes] = useState(0);
   const [DisLikes, setDisLikes] = useState(0);
+  const {usuario} = useAuth();
   
 
   const CargarLikes = async (valor: string) => {
@@ -76,18 +78,80 @@ const Likes: React.FC<LikesProps> = ({ userId, contentId }) => {
     CargarLikes("dislikes");
   }, []);
 
+  const Notificaciones = () =>{
+    Swal.fire({
+      title: "Acción no permitida",
+      text: "Debes iniciar sesión para dar like o dislike",
+      icon: "warning",
+      background: "#111",
+      color: "#fff",
+      confirmButtonColor: "#3b82f6",
+      confirmButtonText: "Entendido",
+    });
+  }
   return (
     <>
-      <div className="flex gap-4">
-        <button onClick={() => DarAccion("likes")}>
-          <ThumbsUp size={24} className="text-green-500" />
-          <p className="text-white">{Lik}</p>
+       
+    <div className="flex justify-center items-center min-h-[300px] bg-black gap-10">
+      {/* Botón Like */}
+      <div className="relative">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-lg opacity-75"></div>
+        <button
+          onClick={usuario?() => DarAccion("likes"):() =>Notificaciones()}
+          className="relative flex items-center gap-3 px-6 py-3 rounded-full bg-black hover:scale-105 transition-transform"
+        >
+          <ThumbsUp
+            size={28}
+            className="stroke-[3px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text"
+            stroke="url(#like-gradient)"
+          />
+          <span className="text-xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
+            {Lik}
+          </span>
         </button>
-        <button onClick={() => DarAccion("dislikes")}>
-          <ThumbsDown size={24} className="text-red-500" />
-          <p className="text-white">{DisLikes}</p>
-        </button>
+
+        {/* Definimos el gradiente SVG */}
+        <svg width="0" height="0">
+          <defs>
+            <linearGradient id="like-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ec4899" />
+              <stop offset="50%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#3b82f6" />
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
+
+      {/* Botón Dislike */}
+      <div className="relative">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 blur-lg opacity-75"></div>
+        <button
+          onClick={usuario?() => DarAccion("dislikes"):()=>Notificaciones()}
+          className="relative flex items-center gap-3 px-6 py-3 rounded-full bg-black hover:scale-105 transition-transform"
+        >
+          <ThumbsDown
+            size={28}
+            className="stroke-[3px] bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-transparent bg-clip-text"
+            stroke="url(#dislike-gradient)"
+          />
+          <span className="text-xl font-bold bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-transparent bg-clip-text">
+            {DisLikes}
+          </span>
+        </button>
+
+        {/* Definimos el gradiente SVG */}
+        <svg width="0" height="0">
+          <defs>
+            <linearGradient id="dislike-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#f87171" />
+              <stop offset="50%" stopColor="#ec4899" />
+              <stop offset="100%" stopColor="#8b5cf6" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  
     </>
   );
 };
