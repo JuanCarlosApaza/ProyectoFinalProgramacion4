@@ -20,7 +20,13 @@ export function MediaDetailView({ pagina, baseImg }: props) {
   const [detail, setDetail] = useState<MediaDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { usuario } = useAuth();
-
+  const [trailerId, setTrailerId] = useState<string | null>(null);
+  const [showTrailer, setShowTrailer] = useState(false);
+  const extractYoutubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
   const fetchDetailsMovie = async () => {
     if (id) {
       try {
@@ -30,6 +36,11 @@ export function MediaDetailView({ pagina, baseImg }: props) {
         );
         console.log(movie);
         setDetail(movie);
+        if (movie) {
+          const id = movie.trailer_url ? extractYoutubeId(movie.trailer_url) : null;
+          setTrailerId(id);
+        }
+        
       } catch (err) {
         setError("No se pudo cargar la información");
       } finally {
@@ -125,7 +136,7 @@ export function MediaDetailView({ pagina, baseImg }: props) {
 
                   {detail.trailer_url && (
                     <button
-                      onClick={() => window.open(detail.trailer_url, "_blank")}
+                      onClick={() => setShowTrailer(true)} // Cambiamos el estado en lugar de abrir una nueva pestaña
                       className="inline-flex items-center px-4 py-2 bg-white text-black font-semibold rounded hover:bg-white/90 transition"
                     >
                       <Play className="mr-2 h-5 w-5" /> VER TRAILER
@@ -201,16 +212,29 @@ export function MediaDetailView({ pagina, baseImg }: props) {
               </div>
             </div>
           </div>
-          <div>
-            <div>
-              <Likes
-                contentId={detail.id ?? "0"}
-                userId={usuario?.uid ?? "0"}
-              />
+          {/* Video de Youtube */}
+          {detail && trailerId && trailerId.length === 11 && showTrailer && (
+            <div className="w-full bg-black py-8">
+              <div className="container mx-auto px-4">
+                <h2 className="text-2xl font-bold text-white mb-6">Tráiler</h2>
+                <div className="aspect-w-16 aspect-h-9 w-full">
+                  <iframe
+                    className="w-full h-[500px]"
+                    src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&rel=0`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
             </div>
+          )}
+          <div>
+            
             <MostrarComentarios
               contentid={detail.id ?? "0"}
-              usuario={usuario?.displayName ?? "anonimo"}
+              user={usuario?.displayName ?? "anonimo"}
               userId={usuario?.uid ?? "0"}
             />
           </div>

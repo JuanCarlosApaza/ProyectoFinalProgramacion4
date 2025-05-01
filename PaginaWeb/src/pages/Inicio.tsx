@@ -74,6 +74,7 @@ const Inicio = () => {
                   alt="Logo Wikigeek"
                   className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-28 ml-2"
                 />
+                <h1 className="mt-6">IA</h1>
               </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight mb-4 font-exo">
                 El catálogo más grande de entretenimiento

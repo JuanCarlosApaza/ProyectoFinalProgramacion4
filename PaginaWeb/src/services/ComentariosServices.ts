@@ -1,5 +1,5 @@
 import { db } from "../Data/Firebase";
-import { collection, addDoc,  getDocs, updateDoc, deleteDoc, doc, query, getDoc, where } from "firebase/firestore";
+import { collection, addDoc,  getDocs, updateDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { Comentarios } from "../Interface/Comentarios";
 export const addComentario = async (comentario: Omit<Comentarios, 'id'>):Promise<string> => {
     try {
@@ -19,6 +19,27 @@ export const getComentarios = async (id:string):Promise<Comentarios[]>=>{
     } catch (error) {
         console.error("Error getting comentarios: ", error);
         throw new Error("Error getting comentarios");
+        
+    }
+}
+export const updateComentario = async (id: string, comentario: Partial<Comentarios>): Promise<void> => {
+    try {
+        await updateDoc(doc(db, "comentarios", id), comentario);
+    } catch (error) {
+        console.error("Error updating comentario: ", error);
+        throw new Error("Error updating comentario");
+        
+    }
+}
+
+export const DeleteComentario = async (id:string):Promise<void>=>{
+    try {
+        const docRef = doc(db, "comentarios", id);
+        await deleteDoc(docRef);
+
+    } catch (error) {
+        console.error("Error eliminando comentario: ", error);
+        throw new Error("Error deleting comentario");
         
     }
 }

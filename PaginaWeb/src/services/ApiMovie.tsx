@@ -36,7 +36,7 @@ export const getMovies = async (parametro: string)=> {
     const ApiUrl=import.meta.env.VITE_REACT_API_URL_MOVIE;
     const Token=import.meta.env.VITE_REACT_API_TOKEN;
     try {
-      const response = await fetch(`${ApiUrl}/movie/${parametro}`, {
+      const response = await fetch(`${ApiUrl}/movie/${parametro}?language=es-ES`, {
         headers: {
           Authorization: `Bearer ${Token}`,
           "Content-Type": "application/json;charset=utf-8"
@@ -70,7 +70,7 @@ export const getMovieDetails = async (id: string, parametros: string = "videos")
   const Token=import.meta.env.VITE_REACT_API_TOKEN;
 
   try {
-    const response = await fetch(`${ApiUrl}/movie/${id}?append_to_response=${parametros}`, {
+    const response = await fetch(`${ApiUrl}/movie/${id}?append_to_response=${parametros}&&language=es-ES`, {
       headers: {
         Authorization: `Bearer ${Token}`,
         "Content-Type": "application/json;charset=utf-8"
