@@ -79,7 +79,7 @@ const Juegos = () => {
 
           {loading ? (
             <LoadingSpinner text="Cargando Juegos" />
-          ) : (
+          ) : games.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {games.map((game) => (
                 <Card
@@ -92,6 +92,10 @@ const Juegos = () => {
                   page="Games"
                 />
               ))}
+            </div>
+          ) : (
+            <div className="w-full h-[300px] flex items-center justify-center">
+              <p className="text-red-400">No se encontraron resultados</p>
             </div>
           )}
         </div>

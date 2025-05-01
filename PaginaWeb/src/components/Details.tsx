@@ -1,85 +1,84 @@
-import { useState, useEffect } from "react";
-import { Play } from "lucide-react";
-import { MediaDetail } from "../Interface/types";
-import { getMovieDetails } from "../services/ApiMovie";
-import { useParams } from "react-router-dom";
-import { LoadingSpinner } from "./Loading";
-import { getGameById } from "../services/ApiGames";
-import { librosdetalles } from "../services/ApiBooks";
-import Navbar from "../utils/Navbar";
-import { useAuth } from "../context/AuthContext";
-import MostrarComentarios from "./Comentarios";
-import Likes from "./ListarLikes";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Play } from "lucide-react"
+import type { MediaDetail } from "../Interface/types"
+import { getMovieDetails } from "../services/ApiMovie"
+import { useParams } from "react-router-dom"
+import { LoadingSpinner } from "./Loading"
+import { getGameById } from "../services/ApiGames"
+import { librosdetalles } from "../services/ApiBooks"
+import Navbar from "../utils/Navbar"
+import { useAuth } from "../context/AuthContext"
+import MostrarComentarios from "./Comentarios"
 interface props {
-  pagina: string;
-  baseImg?: string;
+  pagina: string
+  baseImg?: string
 }
 export function MediaDetailView({ pagina, baseImg }: props) {
-  const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [detail, setDetail] = useState<MediaDetail | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { usuario } = useAuth();
-  const [trailerId, setTrailerId] = useState<string | null>(null);
-  const [showTrailer, setShowTrailer] = useState(false);
+  const { id } = useParams()
+  const [loading, setLoading] = useState(true)
+  const [detail, setDetail] = useState<MediaDetail | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const { usuario } = useAuth()
+  const [trailerId, setTrailerId] = useState<string | null>(null)
+  const [showTrailer, setShowTrailer] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const maxLength = 300
   const extractYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const match = url.match(regExp)
+    return match && match[2].length === 11 ? match[2] : null
+  }
   const fetchDetailsMovie = async () => {
     if (id) {
       try {
-        const movie = await getMovieDetails(
-          id,
-          "videos,credits,images,recommendations"
-        );
-        console.log(movie);
-        setDetail(movie);
+        const movie = await getMovieDetails(id, "videos,credits,images,recommendations")
+        console.log(movie)
+        setDetail(movie)
         if (movie) {
-          const id = movie.trailer_url ? extractYoutubeId(movie.trailer_url) : null;
-          setTrailerId(id);
+          const id = movie.trailer_url ? extractYoutubeId(movie.trailer_url) : null
+          setTrailerId(id)
         }
-        
       } catch (err) {
-        setError("No se pudo cargar la información");
+        setError("No se pudo cargar la información")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-  };
+  }
   const fetchDetailsBook = async () => {
     if (id) {
       try {
-        const movie = await librosdetalles(id);
-        console.log(movie);
-        setDetail(movie);
+        const movie = await librosdetalles(id)
+        console.log(movie)
+        setDetail(movie)
       } catch (err) {
-        setError("No se pudo cargar la información");
+        setError("No se pudo cargar la información")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-  };
+  }
   const fetchDetailsGames = async () => {
     if (id) {
       try {
-        const game = await getGameById(id);
-        console.log("juego", game);
-        if (!game) return;
-        setDetail(game);
+        const game = await getGameById(id)
+        console.log("juego", game)
+        if (!game) return
+        setDetail(game)
       } catch (err) {
-        setError("No se pudo cargar la información");
+        setError("No se pudo cargar la información")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-  };
+  }
   useEffect(() => {
-    if (pagina === "Juegos") fetchDetailsGames();
-    else if (pagina === "Libros") fetchDetailsBook();
-    else fetchDetailsMovie();
-  }, [id]);
+    if (pagina === "Juegos") fetchDetailsGames()
+    else if (pagina === "Libros") fetchDetailsBook()
+    else fetchDetailsMovie()
+  }, [id])
 
   if (loading) {
     return (
@@ -88,51 +87,54 @@ export function MediaDetailView({ pagina, baseImg }: props) {
           <LoadingSpinner text="Cargando detalles de la película..." />
         </div>
       </Navbar>
-    );
+    )
   }
 
   if (error || !detail) {
     return (
       <div className="w-full h-[300px] bg-black/20 flex items-center justify-center">
-        <p className="text-red-400">
-          {error || "No se pudo cargar la información"}
-        </p>
+        <p className="text-red-400">{error || "No se pudo cargar la información"}</p>
       </div>
-    );
+    )
   }
 
   return (
     <div>
       <Navbar>
         <div className="relative w-full">
-          <div className="relative w-full h-[701px] overflow-hidden">
+          <div className="relative w-full min-h-[701px] overflow-hidden">
             {detail.backdrop_path ? (
               <img
-                src={
-                  baseImg
-                    ? baseImg + detail.backdrop_path
-                    : detail.backdrop_path || "/placeholder.svg"
-                }
+                src={baseImg ? baseImg + detail.backdrop_path : detail.backdrop_path || "/placeholder.svg"}
                 alt={detail.title}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-r from-black to-zinc-800" />
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-black to-zinc-800" />
             )}
 
             {/* Overlay oscuro para mejorar la legibilidad */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 z-0" />
 
             {/* Contenido principal */}
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 container mx-auto">
+            <div className="relative z-10 flex flex-col justify-end p-8 md:p-12 container mx-auto mt-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="md:col-span-2">
-                  <h1 className="text-5xl md:text-7xl font-bold text-white mb-4">
-                    {detail.title}
-                  </h1>
-                  <p className="text-lg text-white/90 mb-6 max-w-3xl">
-                    {detail.overview}
-                  </p>
+                  <h1 className="text-5xl md:text-7xl font-bold text-white mb-4">{detail.title}</h1>
+                  {detail.overview && (
+                    <div>
+                      <p className="text-lg text-white/90 mb-6 max-w-3xl">
+                        {detail.overview.length > maxLength && !isExpanded
+                          ? `${detail.overview.substring(0, maxLength)}...`
+                          : detail.overview}
+                      </p>
+                      {detail.overview.length > maxLength && (
+                        <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-400 hover:underline">
+                          {isExpanded ? "Leer menos" : "Leer más"}
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {detail.trailer_url && (
                     <button
@@ -163,15 +165,11 @@ export function MediaDetailView({ pagina, baseImg }: props) {
                 </div>
 
                 <div className="bg-black/50 p-6 rounded-lg backdrop-blur-sm">
-                  <h2 className="text-xl font-semibold text-white mb-4 border-b border-white/20 pb-2">
-                    Detalles
-                  </h2>
+                  <h2 className="text-xl font-semibold text-white mb-4 border-b border-white/20 pb-2">Detalles</h2>
                   <dl className="space-y-2">
                     <div>
                       <dt className="text-white/70">Categoría:</dt>
-                      <dd className="text-white font-medium">
-                        {detail.category}
-                      </dd>
+                      <dd className="text-white font-medium">{detail.category}</dd>
                     </div>
                     <div>
                       <dt className="text-white/70">Calificación:</dt>
@@ -187,24 +185,18 @@ export function MediaDetailView({ pagina, baseImg }: props) {
                     </div>
                     <div>
                       <dt className="text-white/70">Estreno:</dt>
-                      <dd className="text-white font-medium">
-                        {detail.release_date}
-                      </dd>
+                      <dd className="text-white font-medium">{detail.release_date}</dd>
                     </div>
                     {detail.duration && (
                       <div>
                         <dt className="text-white/70">Duración:</dt>
-                        <dd className="text-white font-medium">
-                          {detail.duration}
-                        </dd>
+                        <dd className="text-white font-medium">{detail.duration}</dd>
                       </div>
                     )}
                     {detail.genres && (
                       <div>
                         <dt className="text-white/70">Géneros:</dt>
-                        <dd className="text-white font-medium">
-                          {detail.genres.join(", ")}
-                        </dd>
+                        <dd className="text-white font-medium">{detail.genres.join(", ")}</dd>
                       </div>
                     )}
                   </dl>
@@ -231,7 +223,6 @@ export function MediaDetailView({ pagina, baseImg }: props) {
             </div>
           )}
           <div>
-            
             <MostrarComentarios
               contentid={detail.id ?? "0"}
               user={usuario?.displayName ?? "anonimo"}
@@ -241,5 +232,6 @@ export function MediaDetailView({ pagina, baseImg }: props) {
         </div>
       </Navbar>
     </div>
-  );
+  )
 }
+export default MediaDetailView;

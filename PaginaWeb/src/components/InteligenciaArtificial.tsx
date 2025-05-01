@@ -143,7 +143,6 @@ const GeminiTest = () => {
               onChange={handleChange}
               className="bg-white w-[12%] justify-center text-center mx-auto m-4 p-2 rounded-2xl"
             >
-              <option value="">Selecciona una Opcion</option>
               <option value="peliculas">Peliculas</option>
               <option value="juegos">Juegos</option>
               <option value="libros">Libros</option>

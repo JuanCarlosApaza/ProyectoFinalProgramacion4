@@ -58,10 +58,9 @@ const LibroLeer = () => {
               <Search/>
             </button>
           </div>
-
           {loading ? (
-            <LoadingSpinner text="Cargando libros..." />
-          ) : (
+            <LoadingSpinner text="Cargando Juegos" />
+          ) : Libros.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Libros.map((libro) => (
                 <Card
@@ -74,6 +73,10 @@ const LibroLeer = () => {
                   page="Books"
                 />
               ))}
+            </div>
+          ) : (
+            <div className="w-full h-[300px] flex items-center justify-center">
+              <p className="text-red-400">No se encontraron resultados</p>
             </div>
           )}
         </div>

@@ -15,9 +15,11 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
                 style={{ width: "100%", height: page ==="Books"? "350px":"100%", objectFit: "cover"   }}
             />
             ) : (
-            <div className="flex h-full w-full items-center justify-center bg-muted">
-                <span className="text-muted-foreground">Sin imagen</span>
-            </div>
+                <img
+                src="/defaultImg/default.png"
+                alt={item.title}
+                style={{ width: "100%", height: page ==="Books"? "350px":"100%", objectFit: "cover"   }}
+            />
             )}
 
             <div className="absolute inset-0 bg-black/70 opacity-0 transition-opacity group-hover:opacity-100"></div>
@@ -35,7 +37,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
             </div>
 
             {/* Descripción */}
-            {showOverview && item.summary && (
+            {showOverview  && (
                 <div className="absolute inset-0 flex flex-col p-4 opacity-0 transition-opacity group-hover:opacity-100 z-10 text-white">
                     
                     {/* Título arriba */}
@@ -43,7 +45,7 @@ const Card: React.FC<MyComponentProps> = ({ item, imageBaseUrl, showOverview, co
 
                     {/* Contenedor scrollable solo para la descripción */}
                     <div className="flex-1 overflow-y-auto text-sm">
-                    <p>{item.summary}</p>
+                    <p>{item.summary||"La descripcion no esta disponoble por el momento, gracias por su comprension" }</p>
                     </div>
 
                     {/* Fecha y rating fijos abajo */}
