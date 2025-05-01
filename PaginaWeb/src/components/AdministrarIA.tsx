@@ -74,7 +74,7 @@ export default function GraficoBarras() {
                 fill="#8884d8"
                 label
               >
-                {pieData.map((entry, index) => (
+                {pieData.map(( index) => (
                   <Cell key={`cell-${index}`} fill={coloresEstrellas[index]} />
                 ))}
               </Pie>

@@ -77,7 +77,7 @@ const Navbar: React.FC<Navbarprops> = ({ children }) => {
                 to="/administrar"
                 className="bg-gray-900 hover:bg-gray-700 border border-gray-800 px-4 py-2 rounded-md transition-all"
               >
-                Administrar
+                Reportes
               </Link>}
               
             </li>

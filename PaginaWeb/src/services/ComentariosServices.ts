@@ -1,5 +1,5 @@
 import { db } from "../Data/Firebase";
-import { collection, addDoc,  getDocs, updateDoc, deleteDoc, doc, query, getDoc, where } from "firebase/firestore";
+import { collection, addDoc,  getDocs, updateDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { Comentarios } from "../Interface/Comentarios";
 export const addComentario = async (comentario: Omit<Comentarios, 'id'>):Promise<string> => {
     try {

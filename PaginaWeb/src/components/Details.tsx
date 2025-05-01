@@ -225,12 +225,7 @@ export function MediaDetailView({ pagina, baseImg }: props) {
             </div>
           )}
           <div>
-            <div>
-              <Likes
-                contentId={detail.id ?? "0"}
-                userId={usuario?.uid ?? "0"}
-              />
-            </div>
+            
             <MostrarComentarios
               contentid={detail.id ?? "0"}
               user={usuario?.displayName ?? "anonimo"}

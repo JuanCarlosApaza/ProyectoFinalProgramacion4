@@ -92,7 +92,7 @@ const Likes: React.FC<LikesProps> = ({ userId, contentId }) => {
   return (
     <>
        
-    <div className="flex justify-center items-center min-h-[300px] bg-black gap-10">
+    <div className="flex justify-center items-center min-h-[300px]  gap-10">
       {/* Botón Like */}
       <div className="relative">
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-lg opacity-75"></div>
