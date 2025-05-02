@@ -81,89 +81,110 @@ const MostrarComentarios: React.FC<MostrarComentariosProps> = ({
       }
     });
   };
-
   return (
-    <div>
-      <div className="max-w-6xl mx-auto p-4">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-1/2 mb-6 md:mb-0">
-            <div className="flex">
-              <Likes
-                contentId={contentid ?? "0"}
-                userId={usuario?.uid ?? "0"}
-              />
-              <button
-                onClick={() => botonmostrar()}
-                className="text-white text-2xl "
-              >
-                <MessageCircleMore />
-              </button>
-            </div>
-
-            {visualizar && (
-              <CrearComentario
-                contentId={contentid ?? "0"}
-                user2={user ?? "usuario_desconocido"}
-                userId={userId ?? "0"}
-                accion={CargarComentarios}
-              />
-            )}
+    <div className="max-w-4xl mx-auto px-4 py-2">
+      <div className="flex items-center gap-4 mb-2">
+        <Likes contentId={contentid ?? "0"} userId={usuario?.uid ?? "0"} />
+        
+        {/* Botón Comentarios - Estilo igual a Like/Dislike */}
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-lg opacity-75"></div>
+          <button
+            onClick={botonmostrar}
+            className="relative flex items-center gap-3 px-6 py-3 rounded-full bg-black hover:scale-105 transition-transform"
+          >
+            <MessageCircleMore 
+              size={32}
+              className="stroke-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text"
+              stroke="url(#comment-gradient)"
+            />
+            
+          </button>
+          
+          {/* Gradiente SVG para el icono */}
+          <svg width="0" height="0">
+            <defs>
+              <linearGradient id="comment-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ec4899" />
+                <stop offset="50%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+  
+      {visualizar && (
+        <div className="space-y-4">
+          {/* Crear nuevo comentario */}
+          <div className="bg-[#111827] p-3 rounded-lg border border-gray-700">
+            <CrearComentario
+              contentId={contentid ?? "0"}
+              user2={user ?? "usuario_desconocido"}
+              userId={userId ?? "0"}
+              accion={CargarComentarios}
+            />
           </div>
-
-          <div className="w-full md:w-1/2 flex flex-col gap-4 p-6 bg-black rounded-xl border border-gray-700 shadow-md">
-            {visualizar &&
+          
+          {/* Comentarios */}
+          <div className="space-y-3">
+            {comentarios.length > 0 ? (
               comentarios.map((comentario: any) => (
                 <div
                   key={comentario.id}
-                  className="p-4 bg-gray-800 rounded-lg border border-gray-700"
+                  className="bg-[#1f2937] p-3 rounded-lg border border-gray-700"
                 >
-                  <p className="text-white font-semibold">
-                    {comentario.usuario}
-                  </p>
-                  <form action="">
-                    <textarea
-                      className="text-gray-300 text-base mt-2 w-full"
-                      name="comentario"
-                      value={comentario.comentario}
-                      readOnly={false}
-                    />
-                    {usuario?.uid === comentario.userId ? (
-                      <div className="flex justify-end gap-4">
+                  <div className="flex justify-between items-start">
+                    <p className="text-white font-medium text-sm">
+                      {comentario.usuario}
+                    </p>
+                    {usuario?.uid === comentario.userId && (
+                      <div className="flex gap-2">
                         <button
-                          type="button"
                           onClick={() => handlechange(true)}
-                          className="text-white rounded-2xl p-2"
+                          className="text-white hover:text-gray-300"
                         >
-                          <Pencil />
+                          <Pencil size={16} />
                         </button>
                         <button
-                          type="button"
                           onClick={() => handleDelete(comentario.id)}
-                          className="text-white rounded-2xl p-2"
+                          className="text-white hover:text-red-500"
                         >
-                          <Trash2 />
+                          <Trash2 size={16} />
                         </button>
                       </div>
-                    ) : (
-                      <></>
                     )}
-                    {usuario?.uid === comentario.userId && habilitar ? (
-                      <button className="bg-white text-black rounded-2xl p-2">
-                        Aceptar
-                      </button>
-                    ) : (
-                      <></>
+                  </div>
+  
+                  <form className="mt-2">
+                    <textarea
+                      className="w-full bg-transparent text-gray-300 text-sm resize-none focus:outline-none"
+                      name="comentario"
+                      value={comentario.comentario}
+                      readOnly={!habilitar || usuario?.uid !== comentario.userId}
+                    />
+                    {usuario?.uid === comentario.userId && habilitar && (
+                      <div className="mt-2">
+                        <button className="bg-white text-black text-sm px-3 py-1 rounded-md font-semibold">
+                          Aceptar
+                        </button>
+                      </div>
                     )}
                   </form>
-
-                  <p className="text-gray-500 text-sm mt-2">
+  
+                  <p className="text-gray-500 text-xs mt-1">
                     {comentario.fecha.toDate().toLocaleString()}
                   </p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p className="text-gray-400 text-sm italic">
+                No hay comentarios aún.
+              </p>
+            )}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

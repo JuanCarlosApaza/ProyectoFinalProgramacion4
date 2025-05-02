@@ -1,31 +1,27 @@
 import { Genre, MediaDetail, Model } from "../Interface/types";
 
 export const getGames = async (): Promise<Model[] | undefined> => {
-  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
-  const clientId = import.meta.env.VITE_REACT_CLIENTID;
-  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
- 
+
+  const apiUrl = import.meta.env.VITE_REACT_API_URL_GAMES;
+
   try {
-    const response = await fetch(
-      `${apiUrl}/games`,
-      {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body:
-          "fields name, summary, cover.image_id, first_release_date, rating; sort rating desc; limit 80;"
-      }
-    );
+    const response = await fetch(`${apiUrl}/games`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query:
+          "fields name, summary, cover.image_id, first_release_date, rating; sort rating desc; limit 80;",
+      }),
+    });
 
     if (!response.ok) {
       throw new Error("Error fetching games: " + response.statusText);
     }
 
     const data = await response.json();
-    console.log("Juego",data)
+    console.log("Juego", data);
     const games: Model[] = data.map((game: any) => ({
       id: game.id,
       title: game.name,
@@ -34,9 +30,7 @@ export const getGames = async (): Promise<Model[] | undefined> => {
         : "Fecha desconocida",
       summary: game.summary,
       rating: game.rating,
-      img: game.cover
-        ? `${game.cover.image_id}.jpg`
-        : "",
+      img: game.cover ? `${game.cover.image_id}.jpg` : "",
     }));
     return games;
   } catch (error) {
@@ -44,28 +38,26 @@ export const getGames = async (): Promise<Model[] | undefined> => {
   }
 };
 
-export const getGameById = async (gameId: string): Promise<MediaDetail | undefined> => {
-  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
-  const clientId = import.meta.env.VITE_REACT_CLIENTID;
-  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
+export const getGameById = async (
+  gameId: string
+): Promise<MediaDetail | undefined> => {
+
+  const apiUrl = import.meta.env.VITE_REACT_API_URL_GAMES;
 
   try {
-    const response = await fetch(
-      `${apiUrl}/games`,
-      {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: `
+    const response = await fetch(`${apiUrl}/games`, {
+      method: "POST",
+      headers: {
+       
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({
+        query: `
           fields name, summary, cover.image_id, first_release_date, rating, genres.name, videos.video_id, 
           screenshots.image_id, artworks.image_id, platforms.name;
           where id = ${gameId};
-        `
-      }
-    );
+        `})
+    });
 
     if (!response.ok) throw new Error("Error fetching game detail");
 
@@ -78,12 +70,11 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
       poster_path: game.cover
         ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
         : undefined,
-      backdrop_path:
-        game.artworks?.[0]?.image_id
-          ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.artworks[0].image_id}.jpg`
-          : game.screenshots?.[0]?.image_id
-            ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.screenshots[0].image_id}.jpg`
-            : undefined,
+      backdrop_path: game.artworks?.[0]?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.artworks[0].image_id}.jpg`
+        : game.screenshots?.[0]?.image_id
+        ? `https://images.igdb.com/igdb/image/upload/t_screenshot_huge/${game.screenshots[0].image_id}.jpg`
+        : undefined,
       rating: Math.round(game.rating ?? 0),
       category: "game",
       languages: ["en"],
@@ -95,8 +86,8 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
         ? `https://www.youtube.com/watch?v=${game.videos[0].video_id}`
         : undefined,
       genres: game.genres?.map((genre: any) => genre.name) ?? [],
-      platforms: game.platforms?.map((platform: any) => platform.name) ?? []
-    };    
+      platforms: game.platforms?.map((platform: any) => platform.name) ?? [],
+    };
 
     return mediaDetail;
   } catch (error) {
@@ -104,33 +95,30 @@ export const getGameById = async (gameId: string): Promise<MediaDetail | undefin
   }
 };
 
-export const getGamesName = async (nombre:string): Promise<Model[] | undefined> => {
-  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
-  const clientId = import.meta.env.VITE_REACT_CLIENTID;
-  const apiUrl=import.meta.env.VITE_REACT_API_URL_GAMES;
- 
+export const getGamesName = async (
+  nombre: string
+): Promise<Model[] | undefined> => {
+  const apiUrl = import.meta.env.VITE_REACT_API_URL_GAMES;
+
   try {
-    const response = await fetch(
-      `${apiUrl}/games`,
-      {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          "Authorization": `Bearer ${accessToken}`,
-          'Accept': 'application/json',
-          'Content-Type': 'text/plain'
-        },
-        body:
-          `search "${nombre}";fields name, summary, cover.image_id, first_release_date, rating;limit 5;`
-      }
-    );
+    const response = await fetch(`${apiUrl}/games`, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json", // Este puede quedar
+        "Content-Type": "application/json", // CORREGIDO
+      },
+      body: JSON.stringify({
+        query: `search "${nombre}"; fields name, summary, cover.image_id, first_release_date, rating; limit 5;`,
+      }), // CORREGIDO
+    });
 
     if (!response.ok) {
       throw new Error("Error fetching games: " + response.statusText);
     }
 
     const data = await response.json();
-    console.log("Juego",data)
+    console.log("Juego", data);
+
     const games: Model[] = data.map((game: any) => ({
       id: game.id,
       title: game.name,
@@ -139,70 +127,64 @@ export const getGamesName = async (nombre:string): Promise<Model[] | undefined> 
         : "Fecha desconocida",
       summary: game.summary,
       rating: game.rating,
-      img: game.cover
-        ? `${game.cover.image_id}.jpg`
-        : "",
+      img: game.cover ? `${game.cover.image_id}.jpg` : "",
     }));
+
     return games;
   } catch (error) {
     console.error("Error fetching games:", error);
   }
 };
 
+
 export const getGenres = async () => {
-  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
-  const clientId = import.meta.env.VITE_REACT_CLIENTID;
   const apiUrl = import.meta.env.VITE_REACT_API_URL_GAMES;
-  
+
   try {
     const response = await fetch(`${apiUrl}/genres`, {
       method: "POST",
       headers: {
-        "Client-ID": clientId,
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "text/plain",
+        "Content-Type": "application/json", 
       },
-      body: "fields id, name;limit 30;",
+      body: JSON.stringify({
+        query: "fields id, name; limit 30;", 
+      }),
     });
 
     if (!response.ok) {
-      throw new Error("Error obteniendo los generos: " + response.statusText);
+      throw new Error("Error obteniendo los géneros: " + response.statusText);
     }
 
     const data = await response.json();
 
     const genres: Genre[] = data.map((g: any) => ({
       id: g.id,
-      name: g.name
+      name: g.name,
     }));
 
     return genres;
-
   } catch (error) {
-    console.error("Error en la funcion getGenres :", error);
+    console.error("Error en la función getGenres:", error);
     return [];
   }
-}
+};
 
-export const searchGenresG = async (idGenero: number): Promise<Model[] | undefined> => {
-  const accessToken = import.meta.env.VITE_REACT_ACCESSTOKEN;
-  const clientId = import.meta.env.VITE_REACT_CLIENTID;
+
+export const searchGenresG = async (
+  idGenero: number
+): Promise<Model[] | undefined> => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL_GAMES;
 
   try {
-    const response = await fetch(
-      `${apiUrl}/games`,
-      {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "text/plain",
-        },
-        body:
-          `fields name, summary, cover.image_id, first_release_date, rating; where genres = ${idGenero};limit 20;`
-      }
-    );
+    const response = await fetch(`${apiUrl}/games`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({
+        query: `fields name, summary, cover.image_id, first_release_date, rating; where genres = ${idGenero}; limit 20;`,
+      }), 
+    });
 
     if (!response.ok) {
       throw new Error("Error obteniendo juegos: " + response.statusText);
@@ -211,7 +193,6 @@ export const searchGenresG = async (idGenero: number): Promise<Model[] | undefin
     const data = await response.json();
     console.log("Juegos", data);
 
-    // Mapeamos la respuesta para transformarla en el formato deseado
     const games: Model[] = data.map((game: any) => ({
       id: game.id,
       title: game.name,
@@ -220,9 +201,7 @@ export const searchGenresG = async (idGenero: number): Promise<Model[] | undefin
         : "Fecha desconocida",
       summary: game.summary,
       rating: game.rating,
-      img: game.cover
-        ? `${game.cover.image_id}.jpg`
-        : "",
+      img: game.cover ? `${game.cover.image_id}.jpg` : "",
     }));
 
     return games;
@@ -230,3 +209,4 @@ export const searchGenresG = async (idGenero: number): Promise<Model[] | undefin
     console.error("Error fetching games:", error);
   }
 };
+

@@ -18,7 +18,7 @@ const GeminiTest = () => {
   const [filtro, setFiltro] = useState("");
   const { usuario } = useAuth();
   const [estrellas, setEstrellas] = useState(false);
-  const [categoria, setCategoria] = useState<string>("");
+  const [categoria, setCategoria] = useState<string>("peliculas");
 
   const apikey = import.meta.env.VITE_REACT_APP_API_KEY;
 
@@ -71,8 +71,9 @@ const GeminiTest = () => {
 
     if (enviado) {
       callGeminiAPI();
+      setEnviado(false);
     }
-  }, [enviado, apikey, pregunta]);
+  }, [enviado]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,40 +109,44 @@ const GeminiTest = () => {
           </p>
         </div>
 
-        <div className="mb-4 items-center justify-center text-center flex relative">
-          <img
-            src={imagen3}
-            alt=""
-            className="opacity-100 -mr-10 mt-8 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-          />
-          <img
-            src={imagen4}
-            alt=""
-            className="opacity-90 -mr-20 -mt-4 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-          />
-          <img
-            src={imagen1}
-            alt=""
-            className="opacity-95 z-30 w-48 -mt-14 rounded-lg transition-all duration-500 ease-out hover:scale-110 hover:z-50"
-          />
-          <img
-            src={imagen2}
-            alt=""
-            className="opacity-90 -ml-20 -mt-3 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-          />
-          <img
-            src={imagen5}
-            alt=""
-            className="opacity-100 -ml-10 mt-10 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
-          />
-        </div>
+        <div className="mb-4 items-center justify-center text-center flex relative md:w-[100%]">
+  <img
+    src={imagen3}
+    alt=""
+    className="opacity-100 -mr-10 mt-8 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40 hidden sm:block"
+  />
+  
+  <img
+    src={imagen4}
+    alt=""
+    className="opacity-90 -mr-20 -mt-4 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
+  />
+
+  <img
+    src={imagen1}
+    alt=""
+    className="opacity-95 z-30 w-48 -mt-14 rounded-lg transition-all duration-500 ease-out hover:scale-110 hover:z-50"
+  />
+
+  <img
+    src={imagen2}
+    alt=""
+    className="opacity-90 -ml-20 -mt-3 z-20 w-44 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40"
+  />
+
+  <img
+    src={imagen5}
+    alt=""
+    className="opacity-100 -ml-10 mt-10 z-10 w-40 rounded-lg transition-all duration-500 ease-out hover:scale-105 hover:z-40 hidden sm:block"
+  />
+</div>
 
         <div className="items-center justify-center text-center mb-4 w-[100%]  ">
           <div>
             <select
               value={categoria}
               onChange={handleChange}
-              className="bg-white w-[12%] justify-center text-center mx-auto m-4 p-2 rounded-2xl"
+              className="bg-white md:w-[12%] w-40 justify-center text-center mx-auto m-4 p-2 rounded-2xl"
             >
               <option value="peliculas">Peliculas</option>
               <option value="juegos">Juegos</option>

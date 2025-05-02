@@ -57,9 +57,9 @@ const Peliculas = () => {
     <>
       <Navbar>
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-10 w-full">
             <GenresBox genre={genres} onSearch={cargarPeliculas} />
-            <div className="mb-4 flex gap-2 w-[60%]  ">
+            <div className="mb-4 flex gap-2 md:w-[60%] w-full  ">
               <input
                 type="text"
                 placeholder="Buscar películas..."

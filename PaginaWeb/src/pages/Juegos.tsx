@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { getGames, getGamesName,searchGenresG,getGenres } from "../services/ApiGames";
+import {
+  getGames,
+  getGamesName,
+  searchGenresG,
+  getGenres,
+} from "../services/ApiGames";
 import { Genre, Model } from "../Interface/types";
 import Card from "../components/Card";
 import { LoadingSpinner } from "../components/Loading";
@@ -10,7 +15,7 @@ import { Search } from "lucide-react";
 const Juegos = () => {
   const [games, setGames] = useState<Model[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [genres, setGenres] = useState<Genre[]>([]);
 
   const cargarJuegos = async (idgenre?: number) => {
@@ -58,9 +63,11 @@ const Juegos = () => {
     <div>
       <Navbar>
         <div className="container mx-auto">
-          <div className="flex justify-between">
+          <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-10 w-full">
             <GenresBox genre={genres} onSearch={cargarJuegos} />
-            <div className="mb-4 flex gap-2 w-[60%]">
+
+           
+            <div className="mb-4 flex gap-2 w-full md:w-[60%]">
               <input
                 type="text"
                 placeholder="Buscar películas..."
